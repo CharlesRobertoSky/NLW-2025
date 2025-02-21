@@ -4,8 +4,13 @@ import {
 	validatorCompiler,
 	serializerCompiler,
 	type ZodTypeProvider,
+	jsonSchemaTransform,
 } from "fastify-type-provider-zod";
-import { z } from "zod";
+
+import { fastifySwagger } from "@fastify/Swagger";
+import { fastifySwaggerUi } from "@fastify/swagger-ui";
+import { subscribeToEventRoute } from "./routes/subscribe-to-event-route";
+import { env } from "./env";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -16,30 +21,27 @@ app.register(fastifyCors, {
 	origin: true,
 });
 
-app.post(
-	"/subscriptions",
-	{
-		schema: {
-			body: z.object({
-				name: z.string(),
-				email: z.string().email(),
-			}),
+app.register(fastifySwagger, {
+	openapi: {
+		info: {
+			title: "NLW-Connect",
+			version: "0.0.1",
 		},
 	},
-	(request, reply) => {
-		const { name, email } = request.body;
+	transform: jsonSchemaTransform,
+});
 
-		return reply.status(201).send({
-			name,
-			email,
-		});
-	},
-);
+app.register(fastifySwaggerUi, {
+	routePrefix: "/docs",
+});
+
+app.register(subscribeToEventRoute);
 
 app
 	.listen({
-		port: 3333,
+		port: env.PORT,
 	})
 	.then(() => {
 		console.log("HTTPS server running");
+		console.log("http://localhost:3333");
 	});
