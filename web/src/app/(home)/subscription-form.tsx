@@ -28,7 +28,7 @@ export function SubscriptionForm() {
 	return (
 		<form
 			onSubmit={handleSubmit(onSubscribe)}
-			className="bg-gray-700 border border-gray-600 rounded-2xl p-8 space-y-8 w-full md:max-w-[440px]"
+			className="bg-gray-700 border border-gray-600 rounded-2xl p-8 space-y-8 w-full md:max-w-[440px] "
 		>
 			<h2 className="font-heading font-semibold text-gray-200 text-xl">
 				Inscrição
@@ -47,7 +47,7 @@ export function SubscriptionForm() {
 					</InputRoot>
 
 					{errors.name && (
-						<p className="text-danger text-xs font-semibold">
+						<p className="text-danger text-xs font-semibold ">
 							{errors.name.message}
 						</p>
 					)}
@@ -64,6 +64,12 @@ export function SubscriptionForm() {
 							{...register("email")}
 						/>
 					</InputRoot>
+
+					{errors.email && (
+						<p className="text-danger text-xs font-semibold">
+							{errors.email.message}
+						</p>
+					)}
 				</div>
 			</div>
 			<Button type="submit">
